@@ -25,8 +25,8 @@ export const combine = (...args: any[]): string => args.filter(identity).join(" 
 
 // Date
 export const getDaysInMonth = (date: Date) => {
-	const startWeek = startOfWeek(startOfMonth(date));
-	const endWeek = endOfWeek(endOfMonth(date));
+	const startWeek = startOfWeek(startOfMonth(date), { weekStartsOn: 1 });
+	const endWeek = endOfWeek(endOfMonth(date), { weekStartsOn: 1 });
 	const days = [];
 	for (let curr = startWeek; isBefore(curr, endWeek); ) {
 		days.push(curr);
