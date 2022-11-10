@@ -110,6 +110,7 @@ const DateRangePickerImpl: React.FunctionComponent<DateRangePickerProps> = props
 			setDateRange(newRange);
 		} else {
 			setDateRange({ startDate: day, endDate: undefined });
+			onChange({ startDate: day, endDate: undefined });
 		}
 		setHoverDay(day);
 	};
