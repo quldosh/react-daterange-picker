@@ -2,13 +2,9 @@ import React from "react";
 import {
 	Paper,
 	Grid,
-	Typography,
 	Divider,
-	createStyles,
-	WithStyles,
-	Theme,
-	withStyles
-} from "@material-ui/core";
+	Stack,
+} from "@mui/material";
 import { format, differenceInCalendarMonths } from "date-fns";
 import ArrowRightAlt from "@material-ui/icons/ArrowRightAlt";
 import Month from "./Month";
@@ -16,22 +12,7 @@ import DefinedRanges from "./DefinedRanges";
 import { DateRange, DefinedRange, Setter, NavigationAction } from "../types";
 import { MARKERS } from "..";
 
-const styles = (theme: Theme) =>
-	createStyles({
-		header: {
-			padding: "20px 70px"
-		},
-		headerItem: {
-			flex: 1,
-			textAlign: "center"
-		},
-		divider: {
-			borderLeft: `1px solid ${theme.palette.action.hover}`,
-			marginBottom: 20
-		}
-	});
-
-interface MenuProps extends WithStyles<typeof styles> {
+interface MenuProps {
 	dateRange: DateRange;
 	ranges: DefinedRange[];
 	minDate: Date;
@@ -57,7 +38,6 @@ const Menu: React.FunctionComponent<MenuProps> = props => {
 	const {
 		weekDays,
 		months,
-		classes,
 		ranges,
 		dateRange,
 		minDate,
@@ -75,37 +55,38 @@ const Menu: React.FunctionComponent<MenuProps> = props => {
 	const commonProps = { dateRange, minDate, maxDate, helpers, handlers, weekDays, months };
 	return (
 		<Paper elevation={5} square>
-			<Grid container direction="row" wrap="nowrap">
+			<Stack direction="row" flexWrap="nowrap" py={2}>
 				<Grid>
-					<Grid container direction="row" justify="center" wrap="nowrap">
+					<Stack direction="row" 
+						justifyContent="center"
+						flexWrap="nowrap"
+						divider={<Divider orientation="vertical" flexItem />}>
 						<Month
 							{...commonProps}
 							value={firstMonth}
 							setValue={setFirstMonth}
 							navState={[true, canNavigateCloser]}
 							marker={MARKERS.FIRST_MONTH}
-						/>
-						<div className={classes.divider} />
+							/>
 						<Month
 							{...commonProps}
 							value={secondMonth}
 							setValue={setSecondMonth}
 							navState={[canNavigateCloser, true]}
 							marker={MARKERS.SECOND_MONTH}
-						/>
-					</Grid>
+							/>
+					</Stack>
 				</Grid>
-				<div className={classes.divider} />
-				<Grid>
+				{/* <Grid>
 					<DefinedRanges
 						selectedRange={dateRange}
 						ranges={ranges}
 						setRange={setDateRange}
 					/>
-				</Grid>
-			</Grid>
+				</Grid> */}
+			</Stack>
 		</Paper>
 	);
 };
 
-export default withStyles(styles)(Menu);
+export default Menu;

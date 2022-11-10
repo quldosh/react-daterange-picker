@@ -1,15 +1,13 @@
 import * as React from "react";
 import {
+	Box,
 	IconButton,
-	Typography,
-	createStyles,
-	Theme,
-	WithStyles,
-	withStyles
-} from "@material-ui/core";
+	Typography
+} from "@mui/material";
+import { styled } from "@mui/system";
 import { combine } from "../utils";
 
-interface DayProps extends WithStyles<typeof styles> {
+interface DayProps {
 	filled?: boolean;
 	outlined?: boolean;
 	highlighted?: boolean;
@@ -21,73 +19,63 @@ interface DayProps extends WithStyles<typeof styles> {
 	value: number | string;
 }
 
-const styles = (theme: Theme) =>
-	createStyles({
-		leftBorderRadius: {
-			borderRadius: "50% 0 0 50%"
-		},
-		rightBorderRadius: {
-			borderRadius: "0 50% 50% 0"
-		},
-		buttonContainer: {
-			display: "flex"
-		},
-		button: {
-			height: 36,
-			width: 36,
-			padding: 0
-		},
-		buttonText: {
-			lineHeight: 1.6
-		},
-		outlined: {
-			border: `1px solid ${theme.palette.primary.dark}`
-		},
-		filled: {
-			"&:hover": {
-				backgroundColor: theme.palette.primary.dark
-			},
+const StyledBox = styled(Box)(({ theme }) => ({
+	'&.highlighted': {
+		backgroundColor: theme.palette.action.hover
+	},
+	'&.leftBorderRadius': {
+		borderRadius: "50% 0 0 50%"
+	},
+	'&.rightBorderRadius': {
+		borderRadius: "0 50% 50% 0"
+	}
+}))
+const StyledIconButton = styled(IconButton)(({ theme }) => ({
+	height: 36,
+	width: 36,
+	padding: 0,
+	'&.outlined': {
+		border: `1px solid ${theme.palette.primary.dark}`
+	},
+	'&.filled': {
+		"&:hover": {
 			backgroundColor: theme.palette.primary.dark
 		},
-		highlighted: {
-			backgroundColor: theme.palette.action.hover
-		},
-		contrast: {
-			color: theme.palette.primary.contrastText
-		}
-	});
+		backgroundColor: theme.palette.primary.dark
+	}
+}))
+const StyledTypography = styled(Typography)(({ theme }) => ({
+	'&.contrast': {
+		color: theme.palette.primary.contrastText
+	}
+}))
 
 const Day: React.FunctionComponent<DayProps> = props => {
-	const { classes } = props;
 	return (
-		<div
-			className={combine(
-				classes.buttonContainer,
-				props.startOfRange && classes.leftBorderRadius,
-				props.endOfRange && classes.rightBorderRadius,
-				!props.disabled && props.highlighted && classes.highlighted
-			)}>
-			<IconButton
+		<StyledBox className={combine(
+				props.startOfRange && 'leftBorderRadius',
+				props.endOfRange && 'rightBorderRadius',
+				!props.disabled && props.highlighted && 'highlighted'
+			)} display='flex'>
+			<StyledIconButton
 				className={combine(
-					classes.button,
-					!props.disabled && props.outlined && classes.outlined,
-					!props.disabled && props.filled && classes.filled
+					!props.disabled && props.outlined && 'outlined',
+					!props.disabled && props.filled && 'filled'
 				)}
 				disabled={props.disabled}
 				onClick={props.onClick}
 				onMouseOver={props.onHover}>
-				<Typography
+				<StyledTypography
 					color={!props.disabled ? "initial" : "textSecondary"}
 					className={combine(
-						classes.buttonText,
-						!props.disabled && props.filled && classes.contrast
+						!props.disabled && props.filled && 'contrast'
 					)}
 					variant="body2">
 					{props.value}
-				</Typography>
-			</IconButton>
-		</div>
+				</StyledTypography>
+			</StyledIconButton>
+		</StyledBox>
 	);
 };
 
-export default withStyles(styles)(Day);
+export default Day;

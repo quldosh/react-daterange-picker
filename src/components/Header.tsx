@@ -1,18 +1,16 @@
-import {
-	WithStyles,
-	Grid,
-	createStyles,
-	withStyles,
-	IconButton,
-	Select,
-	MenuItem
-} from "@material-ui/core";
 import React from "react";
+import {
+	Box,
+	Stack,
+	IconButton,
+	NativeSelect,
+} from "@mui/material";
+import { styled } from "@mui/system";
 import ChevronLeft from "@material-ui/icons/ChevronLeft";
 import ChevronRight from "@material-ui/icons/ChevronRight";
 import { setMonth, getMonth, setYear, getYear } from "date-fns";
 
-interface HeaderProps extends WithStyles<typeof styles> {
+interface HeaderProps {
 	date: Date;
 	months?: string[];
 	setDate: (date: Date) => void;
@@ -22,17 +20,19 @@ interface HeaderProps extends WithStyles<typeof styles> {
 	onClickPrevious: () => void;
 }
 
-const styles = createStyles({
-	iconContainer: {
-		padding: 5
-	},
-	icon: {
-		padding: 10,
-		"&:hover": {
-			background: "none"
-		}
+const StyledIconButton = styled(IconButton)(({ theme }) => ({
+	padding: theme.spacing(2),
+	'&:hover': {
+		background: 'none'
 	}
-});
+}))
+
+const StyledNativeSelect = styled(NativeSelect)(({ theme }) => ({
+	color: "#f1f", 
+	'& .MuiInputBase-input': {
+		padding: `${theme.spacing(2)} ${theme.spacing(6)} ${theme.spacing(2)} ${theme.spacing(2)} !important`,
+	}
+}))
 
 const MONTHS = [
 	"Jan",
@@ -58,7 +58,6 @@ const generateYears = (relativeTo: Date, count: number) => {
 
 const Header: React.FunctionComponent<HeaderProps> = ({
 	date,
-	classes,
 	setDate,
 	nextDisabled,
 	prevDisabled,
@@ -75,49 +74,45 @@ const Header: React.FunctionComponent<HeaderProps> = ({
 	};
 
 	return (
-		<Grid container justify="space-between" alignItems="center">
-			<Grid item className={classes.iconContainer}>
-				<IconButton
-					className={classes.icon}
+		<Stack direction='row' justifyContent="space-between" alignItems="center">
+			<Box p={1}>
+				<StyledIconButton
 					disabled={prevDisabled}
 					onClick={onClickPrevious}>
 					<ChevronLeft color={prevDisabled ? "disabled" : "action"} />
-				</IconButton>
-			</Grid>
-			<Grid item>
-				<Select
+				</StyledIconButton>
+			</Box>
+			<Box>
+				<StyledNativeSelect
 					value={getMonth(date)}
-					onChange={handleMonthChange}
-					MenuProps={{ disablePortal: true }}>
+					onChange={handleMonthChange}>
 					{months.map((month, idx) => (
-						<MenuItem key={month} value={idx}>
+						<option key={month} value={idx}>
 							{month}
-						</MenuItem>
+						</option>
 					))}
-				</Select>
-			</Grid>
-
-			<Grid item>
-				<Select
+				</StyledNativeSelect>
+			</Box>
+			<Box>
+				<StyledNativeSelect
 					value={getYear(date)}
-					onChange={handleYearChange}
-					MenuProps={{ disablePortal: true }}>
+					onChange={handleYearChange}>
 					{generateYears(date, 30).map(year => (
-						<MenuItem key={year} value={year}>
+						<option key={year} value={year}>
 							{year}
-						</MenuItem>
+						</option>
 					))}
-				</Select>
+				</StyledNativeSelect>
 
 				{/* <Typography>{format(date, "MMMM YYYY")}</Typography> */}
-			</Grid>
-			<Grid item className={classes.iconContainer}>
-				<IconButton className={classes.icon} disabled={nextDisabled} onClick={onClickNext}>
+			</Box>
+			<Box p={1}>
+				<StyledIconButton disabled={nextDisabled} onClick={onClickNext}>
 					<ChevronRight color={nextDisabled ? "disabled" : "action"} />
-				</IconButton>
-			</Grid>
-		</Grid>
+				</StyledIconButton>
+			</Box>
+		</Stack>
 	);
 };
 
-export default withStyles(styles)(Header);
+export default Header;
